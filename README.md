@@ -1,98 +1,103 @@
-[![Go Report Card](https://goreportcard.com/badge/github.com/OldTyT/frigate-telegram)](https://goreportcard.com/report/OldTyT/frigate-telegram)
-[![GolangCI](https://golangci.com/badges/github.com/OldTyT/frigate-telegram.svg)](https://golangci.com/r/github.com/OldTyT/frigate-telegram)
 
-# Frigate telegram
 
-Frigate telegram event notifications.
+Frigate Telegram
+Notificações de eventos do Frigate via Telegram.
 
----
+Exemplo de funcionamento
+![image](https://github.com/user-attachments/assets/b890e264-d038-4cf8-813e-5dc24e099fc6)
 
-## Example of work
 
-![alt text](https://raw.githubusercontent.com/OldTyT/frigate-telegram/main/resources/img/telegram_msg.png)
+Como iniciar
+Instale o Docker
 
-## How to start
+Baixe o arquivo docker-compose.yml:
 
-1. Install docker
-2. Download `docker-compose.yml` file:
-```bash
+bash
+Copiar
+Editar
 https://raw.githubusercontent.com/OldTyT/frigate-telegram/main/docker-compose.yml
-```
-3. Change environment variables in docker-compose
-4. Deploy:
-```bash
+Altere as variáveis de ambiente no docker-compose
+
+Faça o deploy:
+
+bash
+Copiar
+Editar
 docker compose up -d
-```
-5. Profit!
+Lucro!
 
-### Environment variables
+Variáveis de Ambiente
+Variável	Valor Padrão	Descrição
+TELEGRAM_BOT_TOKEN	""	Token do bot do Telegram.
+FRIGATE_URL	http://localhost:5000	Link interno para o Frigate.
+FRIGATE_EVENT_LIMIT	20	Limita o número de eventos retornados.
+DEBUG	False	Modo debug.
+TELEGRAM_CHAT_ID	0	ID do chat do Telegram.
+SLEEP_TIME	5	Tempo de espera após o ciclo, em segundos.
+FRIGATE_EXTERNAL_URL	http://localhost:5000	Link externo do Frigate (usado para gerar links nas mensagens).
+TZ	""	Fuso horário
+REDIS_ADDR	localhost:6379	IP e porta do Redis
+REDIS_PASSWORD	""	Senha do Redis
+REDIS_DB	0	Banco de dados Redis
+REDIS_PROTOCOL	3	Protocolo do Redis
+REDIS_TTL	1209600	TTL das chaves de eventos no Redis (em segundos)
+TIME_WAIT_SAVE	30	Tempo de espera para o vídeo do evento ser totalmente criado (em segundos)
+WATCH_DOG_SLEEP_TIME	3	Tempo de espera do watchdog (em segundos)
+EVENT_BEFORE_SECONDS	300	Enviar evento ocorridos nos segundos anteriores
+SEND_TEXT_EVENT	False	Enviar evento como texto sem mídia
+FRIGATE_EXCLUDE_CAMERA	None	Lista de câmeras do Frigate a serem excluídas, separadas por ,
+FRIGATE_INCLUDE_CAMERA	All	Lista de câmeras do Frigate a serem incluídas, separadas por ,
+FRIGATE_EXCLUDE_LABEL	None	Lista de labels de eventos a serem excluídas, separadas por ,
+FRIGATE_INCLUDE_LABEL	All	Lista de labels de eventos a serem incluídas, separadas por ,
+FRIGATE_EXCLUDE_ZONE	None	Lista de zonas do Frigate a serem excluídas, separadas por ,
+FRIGATE_INCLUDE_ZONE	All	Lista de zonas do Frigate a serem incluídas, separadas por ,
+REST_API_ENABLE	False	Habilita a API REST HTTP
+REST_API_LISTEN_ADDR	:8080	Endereço onde a API REST irá escutar
 
-| Variable | Default value | Description |
-| ----------- | ----------- | ----------- |
-| `TELEGRAM_BOT_TOKEN` | `""`| Token for telegram bot. |
-| `FRIGATE_URL` | `http://localhost:5000` | Internal link in frigate. |
-| `FRIGATE_EVENT_LIMIT` | `20`| 	Limit the number of events returned. |
-| `DEBUG` | `False` | Debug mode. |
-| `TELEGRAM_CHAT_ID` | `0` | Telegram chat id. |
-| `SLEEP_TIME`| `5` | Sleep time after cycle, in second. |
-| `FRIGATE_EXTERNAL_URL` | `http://localhost:5000` | External link in frigate(need for generate link in message). |
-| `TZ` | `""` | Timezone |
-| `REDIS_ADDR` | `localhost:6379` | IP and port redis |
-| `REDIS_PASSWORD` | `""` | Redis password |
-| `REDIS_DB` | `0` | Redis DB |
-| `REDIS_PROTOCOL` | `3` | Redis protocol |
-| `REDIS_TTL` | `1209600` | Redis TTL for key event(in seconds) |
-| `TIME_WAIT_SAVE` | `30` | Wait for fully video event created(in seconds) |
-| `WATCH_DOG_SLEEP_TIME` | `3` | Sleep watch dog goroutine seconds |
-| `EVENT_BEFORE_SECONDS` | `300` | Send event before seconds |
-| `SEND_TEXT_EVENT` | `False` | Send text event without media |
-| `FRIGATE_EXCLUDE_CAMERA` | `None` | List exclude frigate camera, separate `,` |
-| `FRIGATE_INCLUDE_CAMERA` | `All` | List Include frigate camera, separate `,` |
-| `FRIGATE_EXCLUDE_LABEL` | `None` | List exclude frigate event, separate `,` |
-| `FRIGATE_INCLUDE_LABEL` | `All` | List Include frigate event, separate `,` |
-| `FRIGATE_EXCLUDE_ZONE` | `None` | List exclude frigate zone, separate `,` |
-| `FRIGATE_INCLUDE_ZONE` | `All` | List Include frigate zone, separate `,` |
-| `REST_API_ENABLE` | `False` | Enabling the http rest API |
-| `REST_API_LISTEN_ADDR` | `:8080` | Rest API listen addr |
-
-
-## Features
-
-### Rest API
-
-First the API needs to be enabled in the ENV. The docker-compose.yml has the ENV already but set to "False" per default.
+Funcionalidades
+API REST
+Primeiro, a API precisa estar habilitada nas variáveis de ambiente. O arquivo docker-compose.yml já possui a variável, mas está como "False" por padrão.
+Para habilitar:
 REST_API_ENABLE: True
 
-The Full URL: http://IP-OF-DOCKER-HOST:8080/api/v1/COMMAND
+URL completa:
+http://IP-DO-HOST-DO-DOCKER:8080/api/v1/COMANDO
 
-Possible Commands: 
-- /mute
-- /ping
-- /resume
-- /status
-- /stop
-- /unmute
+Comandos disponíveis:
 
-For more details Swagger aviaible on: `http://localhost:8080/docs/index.html`
+/mute
 
-### Mute/unmute events messages
+/ping
 
-You can enable or disable notifications for event messages (data is stored in Redis, ensuring persistence across restarts).
+/resume
 
-Commands:
-* `/mute`
-* `/unmute`
+/status
 
-> [!WARNING]
-> For security reasons, commands only work in the TelegramChatID chat.
+/stop
 
-### Stop/resume send events messages
+/unmute
 
-You can pause or resume sending notifications for event messages (data is stored in Redis, ensuring persistence across restarts).
+Mais detalhes disponíveis no Swagger:
+http://localhost:8080/docs/index.html
 
-Commands:
-* `/stop`
-* `/resume`
+Silenciar/reativar mensagens de eventos
+Você pode ativar ou desativar as notificações de eventos (os dados são armazenados no Redis, garantindo persistência após reinicializações).
 
-> [!WARNING]
-> For security reasons, commands only work in the TelegramChatID chat.
+Comandos:
+
+/mute
+
+/unmute
+
+⚠️ Atenção: Por motivos de segurança, os comandos só funcionam no chat com o TelegramChatID especificado.
+
+Pausar/retomar envio de mensagens de eventos
+Você pode pausar ou retomar o envio das notificações de eventos (os dados são armazenados no Redis, garantindo persistência após reinicializações).
+
+Comandos:
+
+/stop
+
+/resume
+
+⚠️ Atenção: Por motivos de segurança, os comandos só funcionam no chat com o TelegramChatID especificado.
